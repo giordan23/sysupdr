@@ -116,25 +116,20 @@
 
                         </div>
 
-                        <div class="form-group">
+                        {{-- <div class="form-group">
                             <label for="faculty">Facultad</label>
                             <input type="text" class="form-control" id="faculty" aria-describedby="faculty"
                                 name="faculty" autocomplete="off" placeholder="Facultad" class="form-control-plaintext"
                                 required value="{{ old('faculty') }}">
-                        </div>
+                        </div> --}}
                         <div class="form-group">
-                            <label for="faculty">Denominacion</label>
-                            <input type="text" class="form-control" id="denomination" aria-describedby="denomination"
-                                name="denomination" autocomplete="off" placeholder="Facultad" class="form-control-plaintext"
-                                required value="{{ old('denomination') }}">
-                        </div>
-                        <div class="form-group">
-                            <label for="originality">Originalidad</label>
-                            <input type="number" step="0.01" class="form-control" id="originality"
-                                aria-describedby="originality" name="originality" autocomplete="off"
-                                placeholder="Originalidad" class="form-control-plaintext" required
-                                value="{{ old('originality', 100) }}" onclick="porcentaje()">
-
+                            <label for="denominacion_id">Denominacion</label>
+                            <select class="form-control" name="denominacion_id" id="denominacion_id">
+                                <option value="">Selecione...</option>
+                                @foreach ($denominations as $denomination)
+                                    <option value="{{ $denomination->id }}">{{ ucwords($denomination->nombre) }}</option>
+                                @endforeach
+                            </select>
                         </div>
                         <div class="form-group">
                             <label for="similitude">Similitud</label>
@@ -142,6 +137,14 @@
                                 aria-describedby="similitude" name="similitude" autocomplete="off"
                                 placeholder="Similitud" class="form-control-plaintext" required
                                 value="{{ old('similitude', 0) }}" onclick="porcentaje()">
+
+                        </div>
+                        <div class="form-group">
+                            <label for="originality">Originalidad</label>
+                            <input type="number" step="0.01" class="form-control" id="originality"
+                                aria-describedby="originality" name="originality" autocomplete="off"
+                                placeholder="Originalidad" class="form-control-plaintext" required
+                                value="{{ old('originality', 100) }}" onclick="porcentaje()">
 
                         </div>
                         <div class="form-group">
@@ -212,15 +215,15 @@
     </script>
     <script>
         function porcentaje() {
-            var originality = document.getElementById("originality").value;
+            var similitude = document.getElementById("similitude").value;
             // var similitude = document.getElementById("similitude").value;
             var cien = 100;
             try {
-                totalP = cien - (originality);
+                totalP = cien - (similitude);
                 if (totalP < 0) {
                     similitude.value = "0";
                 } else {
-                    document.getElementById("similitude").value = totalP;
+                    document.getElementById("originality").value = totalP;
                 }
             } catch (e) {}
         }

@@ -16,6 +16,7 @@ class CreateDenominacionsTable extends Migration
         Schema::create('denominacions', function (Blueprint $table) {
             $table->id();
             $table->string('nombre');
+            $table->string('mencion');
             $table->timestamps();
         });
     }

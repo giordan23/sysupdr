@@ -2,17 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreCertificateRequest;
-use App\Http\Requests\UpdateCertificateRequest;
 use App\Models\Adviser;
 use App\Models\Author;
 use App\Models\Certificate;
+use App\Models\Denominacion;
 use Illuminate\Http\Request;
 use \Barryvdh\DomPDF\Facade\Pdf  as PDF;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Redirect;
-use Illuminate\Validation\Rule;
-
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class CertificateController extends Controller
 {
@@ -38,8 +35,9 @@ class CertificateController extends Controller
         $authors = Author::get();
         $advisers = Adviser::get();
         $certificate_types = ['BACHILLER', 'TITULO', 'MAESTRIA', 'DOCTORADO', 'SEGUNDA ESPECIALIDAD', 'FAEDIS', 'FOCAM', 'PROGRAMA 066'];
+        $denominations = Denominacion::all();
 
-        return view('certificate.create', compact('authors', 'advisers', 'certificate_types'));
+        return view('certificate.create', compact('authors', 'advisers', 'certificate_types', 'denominations'));
     }
 
     /**
@@ -50,14 +48,13 @@ class CertificateController extends Controller
      */
     public function store(Request $request)
     {
-
         $rules = [
             'title' => 'required|min:3',
-            'faculty' => 'required',
             'originality' => 'required|numeric',
             'similitude' => 'required|numeric',
             'date' => 'date_format:Y-m-d',
             'author' => 'required',
+            'denominacion_id' => 'required',
             'adviser' => 'required',
             'authored' => 'required|exists:App\Models\Author,id',
             'authored2' => 'different:authored',
@@ -70,24 +67,12 @@ class CertificateController extends Controller
             'date.date_format' => 'La fecha no esta en el formato correcto.',
             'authored.required' => 'El autor es requerido',
             'authored.exists' => 'No se encontro al autor',
-            // 'authored2.exists' => 'No se encontro al segundo autor',
             'authored2.different' => 'Seleccione el autor diferente al primero',
             'advisered.required' => 'El asesor es requerido',
             'advisered.exists' => 'No se encontro al asesor',
 
         ];
         $this->validate($request, $rules, $messages);
-        // $authorId = $request->input('author');
-        // $chain1 = $authorId;
-        // $separator1 = "-";
-        // $separatedAuthor = explode($separator1, $chain1);
-        // $author=(int)$separatedAuthor[0];
-
-        // $advisersId = $request->input('adviser');
-        // $chain = $advisersId;
-        // $separator = "-";
-        // $separatedAdviser = explode($separator, $chain);
-        // $author=(int)$separatedAdviser[0];
 
         $program = $request->input('program');
 
@@ -110,12 +95,13 @@ class CertificateController extends Controller
         $certificate = new Certificate();
         $certificate->title = strtoupper($request->input('title'));
         $certificate->author_id = $request->input('authored');
-        $certificate->second_author_id = $request->input('authored2');
+        $certificate->author2_id = $request->input('authored2');
+        $certificate->denominacion_id = $request->input('denominacion_id');
         $certificate->adviser_id = $request->input('advisered');
         $certificate->program = $program;
         $certificate->document_number = $doc_num;
 
-        $certificate->faculty = $request->input('faculty');
+        // $certificate->faculty = $request->input('faculty');
         $certificate->originality = $request->input('originality');
         $certificate->similitude = $request->input('similitude');
         $certificate->date = $request->input('date');
@@ -207,10 +193,93 @@ class CertificateController extends Controller
     public function reportCertificate(Request $request)
     {
         $certificate = Certificate::findOrFail($request->input('certificate'));
-        view()->share(['certificate' => $certificate]);
+
+        $header_focam = null;
+        $header_p066 = null;
+        $header_faedis = null;
+        $mencion_titulo = null;
+        $grado = null;
+        $message = null;
+
+        switch ($certificate->program) {
+            case 'BACHILLER':
+                $grado = '<strong> Grado académico de Bachiller</strong>';
+                $message = 'El ' . $grado . ' en:';
+                break;
+            case 'TITULO':
+                $mencion_titulo = '<strong> LICENCIADO EN CIENCIAS DE LA EDUCACION</strong>';
+                $grado = "<strong> Titulo profesional</strong>";
+                $message = 'El ' . $grado . ' de:';
+                break;
+            case 'MAESTRIA':
+                $grado = '<strong> Grado académico de Maestro</strong>';
+                $message = 'El ' . $grado . ' en la mención de:';
+                break;
+            case 'DOCTORADO':
+                $grado = '<strong> Grado académico de Doctor</strong>';
+                $message = 'El ' . $grado . ' en:';
+                break;
+            case 'SEGUNDA ESPECIALIDAD':
+                $grado = '<strong> Título Profesional de Segunda Especialidad</strong>';
+                $message = 'El ' . $grado . ' en:';
+                break;
+            case 'FAEDIS':
+                $header_faedis = 'FONDO DE APOYO ECONÓMICO A LOS DOCENTES INVESTIGADORES (FAEDI)';
+                break;
+            case 'FOCAM':
+                $header_focam = 'FONDO DE DESAROLLO SOCIOECONÓMICO DE CAMISEA (FOCAM) ';
+                $grado = '<strong> Titulo profesional</strong>';
+                $message = 'El ' . $grado . ' de:';
+                break;
+            case 'PROGRAMA 066':
+                $header_p066 = 'PROGRAMA 066 ';
+                $grado = '<strong>Titulo profesional</strong>';
+                $message = 'El ' . $grado . ' de:';
+                break;
+        }
+
+        $meses = array("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre");
+        $fecha = Carbon::parse($certificate->created_at);
+        // dd($certificate->created_at);
+        $mes = $meses[($fecha->format('n')) - 1];
+        // dd($mes);
+        $fecha_emision = $fecha->format('d') . ' de ' . $mes . ' de ' . $fecha->format('Y');
+        // dd($fecha_emision);
+        $num_doc = $certificate->document_number;
+        function mapped_implode($glue, $array, $symbol = '=')
+        {
+            return implode(
+                $glue,
+                array_map(
+                    function ($k, $v) use ($symbol) {
+                        return $k . $symbol . $v;
+                    },
+                    array_keys($array),
+                    array_values($array)
+                )
+            );
+        }
+
+        $data = [
+            $certificate->program,
+            $num_doc,
+            $certificate->authors->full_name,
+            $certificate->authorSecond ? $certificate->authorSecond->full_name : null,
+            $certificate->advisers->full_name,
+            'P,n_doc,a_1,a_2,asesor'
+        ];
+        $datos = mapped_implode(', ', $data, ' => ');
+
+        $qr = base64_encode(QrCode::style('round')->generate($datos));
+        // $qr = QrCode::size(100)->format('png')->generate('Make me into a QrCode!', '../public/qrcodes/qrcode ' . $certificate->updated_at . $num_doc . '.svg');
+        // dd($qr);
+
+        view()->share([
+            'certificate' => $certificate, 'fecha_emision' => $fecha_emision, 'grado' => $grado, 'message' => $message, 'mencion_titulo' => $mencion_titulo, 'header_focam' => $header_focam, 'header_p066' => $header_p066, 'mencion_titulo' => $mencion_titulo
+        ]);
         if ($request->has('download')) {
             PDF::setOptions(['dpi' => '150', 'defaultFont' => 'sans-serif']);
-            $pdf = PDF::loadView('certificate.pdf');
+            $pdf = PDF::loadView('certificate.pdf', compact('qr'));
             $pdf->setPaper('a4');
             return $pdf->stream('certificado.pdf');
         }

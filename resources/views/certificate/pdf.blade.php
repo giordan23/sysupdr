@@ -22,13 +22,11 @@
 
     #title {
         margin-top: 30%;
-        margin-left: 20%;
     }
 
     #titleh1 {
         font-size: 30px;
         color: black;
-
     }
 
     #p1 {
@@ -69,32 +67,18 @@
         border-color: black;
     }
 
-    #tr {
-        color: black;
-
-        border: 1px solid;
-        border-color: black;
-    }
-
-    #td {
-        color: black;
-
-        border: 1px solid;
-        border-color: black;
-    }
-
     #adjunto {
         margin-left: 10%;
         margin-right: 10%;
     }
 
     #expire {
-        margin-left: 50%;
+        margin-top: 1em;
+        margin-left: 35%;
     }
 
     #code {
         margin-left: 10%;
-        margin-top: 10%;
         color: black;
     }
 
@@ -107,85 +91,109 @@
         margin-left: 14%;
         margin-right: 10%;
     }
+
+    .td1 {
+        padding: 0.3em;
+        border-style: solid;
+        border-width: 0.1em;
+    }
+
+    p,
+    img {
+        margin: 0;
+        padding: 0;
+    }
+
+    .c1 {
+        padding-left: 30px;
+    }
+
+    .c2 {
+        padding-right: 30px;
+    }
 </style>
 
 <body>
-    <div id="title">
-        <strong><label id="titleh1" class="text-danger py-2"><i>CERTIFICADO DE ORIGINALIDAD</i></label></strong>
-    </div>
-    <div class="margen">
-        <strong>
-            <p class="my-1">Por medio del presente y de acuerdo al siguiente detalle:</p>
-        </strong>
-    </div>
-    <div class="sublist">
-        <p class="text-justify">Trabajo de Investigación, titulado: <br><strong>"{{ $certificate->title }}"</strong></p>
-    </div>
-    <div class="sublist">
-        <p>Presentado por los autores: <br><strong>{{ $certificate->authors->full_name }} @if ($certificate->authorSecond)
-                    <br> {{ $certificate->authorSecond->full_name }}
-                @endif
-            </strong></p>
-    </div>
-    <div class="sublist">
-        <p>Docente Asesor: <br><strong>{{ $certificate->advisers->full_name }} </strong></p>
-    </div>
+    <div class="container">
+        <div class="row">
+            <div id="title" class="py-1">
+                <strong>
+                    <p id="titleh1" class="text-danger pt-3 text-center"><i>CERTIFICADO DE ORIGINALIDAD</i></p>
+                </strong>
+            </div>
+            <div class="margen">
+                <strong>
+                    <p>Por medio del presente y de acuerdo al siguiente detalle:</p>
+                </strong>
+            </div>
+            <div class="sublist pt-1">
+                <p class="text-justify">Trabajo de Investigación, @if ($certificate)
 
-    <div class="sublist">
-        <p>Para obtener: <br>El<strong> Grado Académico de Bachiller </strong> en {{ $certificate->advisers->full_name }} </p>
-    </div>
+                @endif titulado:
+                    <br><strong>"{{ $certificate->title }}"</strong>
+                </p>
+            </div>
+            <div class="sublist pt-1">
+                <p>Presentado por: <br><strong>{{ $certificate->authors->full_name }} @if ($certificate->authorSecond)
+                            <br> {{ $certificate->authorSecond->full_name }}
+                        @endif
+                    </strong></p>
+            </div>
+            <div class="sublist pt-1">
+                <p>Docente Asesor(a): <br><strong>{{ $certificate->advisers->full_name }} </strong></p>
+            </div>
 
-    <p id="p1" class="text-justify">Por medio de este documento de Originalidad el área de Repositorio
-        Institucional de la Universidad Nacional de Huancavelica, certifica que el trabajo de investigación
-        titulado: <label id="titleDoc">{{ $certificate->title }}</label></p>.<label></p>
+            <div class="sublist pt-1">
+                <p>Para obtener: <br>{!! $message !!}
+                    <strong> {{ $certificate->denominacion->nombre }}. </strong>
+                </p>
+            </div>
 
-        <p id="parrafo2" class="text-justify">
-            Cuyo docente asesor es: <b id="asesor">{{ $certificate->advisers->full_name }}</b>. Con la
-            finalidad de obtener el grado académico de <b id="asesor">{{ $certificate->program }}</b> en: <b
-                id="asesor">{{ $certificate->faculty }}</b> el Repositorio Institucional hace saber que <b>es
-                un trabajo de investigación original</b> y no ha sido presentado ni publicado en otras revistas
-            científicas nacionales e internacionales ni en sitio o portal electrónico.
-        </p>
-        <p id="parrafo2" class="text-justify">
-            Por tanto, basándonos en el cumplimiento del Art.4 del Reglamento del Software Anti plagio de la
-            UNH, el área de Repositorio Institucional de la Universidad Nacional de Huancavelica dictamina que
-            este trabajo de investigación fue analizado por el software anti plagio TURNITIN y al estar dentro
-            de los parámetros establecidos, esta investigación es aceptado como <b id="titleDoc">original</b>.
-        </p>
-        <table id="table">
+            <p id="p1" class="text-justify pt-2">La Unidad de Promoción, Difusión y Repositorio, <strong>
+                    certifica
+                    que es
+                    un
+                    trabajo
+                    de investigación original </strong> y que no ha sido presentado ni publicado en revistas científicas
+                nacionales e
+                internacionales, ni en sitio o portal electrónico.
+                <br>
+                Por tanto, en cumplimiento del Art.4° del Reglamento del Software Anti plagio de la Universidad Nacional
+                de
+                Huancavelica, se dictamina que el trabajo de investigación fue analizado por el software anti plagio
+                TURNITIN
+                (realizado por el docente Asesor), se expide el siguiente certificado.
+            </p>
 
-            <tr id="tr">
+            <table id="table" class="pt-2">
 
-                <td id="td">ORIGINALIDAD</td>
-
-                <td id="td">SIMILITUD</td>
-
-            </tr>
-
-            <tr id="tr">
-
-                <td id="td" class="text-center">{{ $certificate->originality }}%</td>
-
-                <td id="td" class="text-center">{{ $certificate->similitude }}%</td>
-
-            </tr>
-        </table>
-        <div id="adjunto">
-
-            <label>ADJUNTO:</label>
-            <ol type=”A”>
-                <li>Captura de pantalla de la revisión del trabajo de investigación en el software anti plagio -
-                    TURNITIN.</li>
-            </ol>
+                <tr class="tr1">
+                    <td class="td1"><strong>ORIGINALIDAD</strong></td>
+                    <td class="td1"><strong>SIMILITUD</strong></td>
+                </tr>
+                <tr class="tr1">
+                    <td class="td1 text-center"><strong>{{ $certificate->originality }}%</strong></td>
+                    <td class="td1 text-center"><strong>{{ $certificate->similitude }}%</strong></td>
+                </tr>
+            </table>
         </div>
-        <div id=expire>
 
-            El presente Certificado se expide el <b
-                id="date">{{ \Carbon\Carbon::parse($certificate->created_at)->format('d-m-Y') }}</b>
+        <div class="row">
+            <div class="col-sm pl-5 ml-4">
+                <img src="data:image/png;base64, {!! $qr !!}">
+            </div>
+            <p class="text-right pr-5 mr-4">
+                El presente Certificado se expide el {{ $fecha_emision }}.
+            </p>
+
         </div>
-        <p id="code">
-            Nº {{ str_pad($certificate->id, 3, '0', STR_PAD_LEFT) }}-{{ now()->year }}
-        </p>
+        <div>
+            <p id="code" class="pt-5 mt-5">
+                {{ $certificate->document_number }}
+            </p>
+        </div>
+    </div>
+
 </body>
 
 </html>

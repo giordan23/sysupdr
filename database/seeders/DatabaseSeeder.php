@@ -58,15 +58,14 @@ class DatabaseSeeder extends Seeder
         Certificate::create([
             'title' => 'IDENTIDAD CULTURAL EN LOS NIÑOS QUECHUA HABLANTES DEL 6° GRADO DE LA INSTITUCIÓN EDUCATIVA N°31278 DE PUCARUMI - TAYACAJA',
             'program' => 'BACHILLER',
-            'faculty' => 'FACULTAD DE CIENCIAS DE LA SALUD',
-            'denomination' => $d1->nombre,
             'document_number' => 'Nº 0001-2022',
             'originality' => 100,
             'similitude' => 0,
+            'denominacion_id' => $d1->id,
             'date' => Carbon::now()->format('d-m-Y'),
             'observation' => 'asdasd',
             'author_id' => $author1->id,
-            'second_author_id' => $author2->id,
+            'author2_id' => $author2->id,
             'adviser_id' => $adviser1->id,
             'created_at' => Carbon::now()
         ]);

@@ -8,19 +8,18 @@ use Illuminate\Database\Eloquent\Model;
 class Certificate extends Model
 {
     use HasFactory;
-    // protected $guarded;
-    protected $fillable = [
-        'title',
-        'program',
-        'faculty',
-        'originality',
-        'similitude',
-        'date',
-        'document_number',
-        // 'code',
-        'observation',
-        'second_author_id'
-    ];
+    protected $guarded;
+    // protected $fillable = [
+    //     'title',
+    //     'program',
+    //     'originality',
+    //     'similitude',
+    //     'date',
+    //     'document_number',
+    //     // 'code',
+    //     'observation',
+    //     'second_author_id'
+    // ];
     public function authors()
     {
         return $this->belongsTo(Author::class,'author_id');
@@ -31,6 +30,10 @@ class Certificate extends Model
     }
     public function authorSecond()
     {
-        return $this->belongsTo(Author::class,'second_author_id');
+        return $this->belongsTo(Author::class,'author2_id');
+    }
+    public function denominacion()
+    {
+        return $this->belongsTo(Denominacion::class,'denominacion_id');
     }
 }

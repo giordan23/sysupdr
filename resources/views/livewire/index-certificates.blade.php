@@ -44,13 +44,12 @@
             <table class="table align-items-center table-flush">
                 <thead class="thead-light">
                     <tr>
-                        <th class="text-center">OPC</th>
+                        <th class="text-center">OPCIONES</th>
                         <th class="text-center">Nº</th>
                         <th class="text-center">Title</th>
                         <th class="text-center">Autor</th>
                         <th class="text-center">Asesor</th>
                         <th class="text-center">Programa</th>
-                        <th class="text-center">Facultad</th>
                         <th class="text-center">Originalidad</th>
                         <th class="text-center">Similitud</th>
                         <th class="text-center">Fecha</th>
@@ -60,7 +59,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($certificates as $certificate)
+                    @foreach ($certificates as $key => $certificate)
                         <tr>
                             <td class="text-center">
                                 <div class="dropdown">
@@ -84,6 +83,7 @@
 
                             </td>
                             <td class="text-center">
+                                {{$key+1}}
                             </td>
 
                             <td class="text-center" title="{{ $certificate->title }}">
@@ -105,9 +105,7 @@
                             <td class="text-center">
                                 {{ $certificate->program }}
                             </td>
-                            <td class="text-center" title="{{ $certificate->faculty }}">
-                                {{ Str::limit($certificate->faculty, 10, $end = '...') }}
-                            </td>
+
                             <td class="text-center">
                                 {{ $certificate->originality }}%
                             </td>

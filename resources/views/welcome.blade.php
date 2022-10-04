@@ -5,8 +5,8 @@
         <div class="container">
             <div class="header-body text-center mt-7 mb-7">
                 <div class="row justify-content-center">
-                    <div class="col-lg-5 col-md-6">
-                        <h1 class="text-white">{{ __('Bienvenido a UPDyR.') }}</h1>
+                    <div class="col-lg-6 col-md-7">
+                        <h1 class="text-white">{{ __('Bienvenido a la Unidad de Promoción, Difusión y Repositorio de la Universidad Nacional de Huancavelica.') }}</h1>
                     </div>
                 </div>
             </div>
