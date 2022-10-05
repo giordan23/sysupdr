@@ -63,6 +63,7 @@ class DatabaseSeeder extends Seeder
             'similitude' => 0,
             'denominacion_id' => $d1->id,
             'date' => Carbon::now()->format('d-m-Y'),
+            'resolucion_ruta' => 'ruta/prueba',
             'observation' => 'asdasd',
             'author_id' => $author1->id,
             'author2_id' => $author2->id,

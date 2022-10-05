@@ -45,9 +45,9 @@
 
                         <div class="form-group">
                             <label for="title">Titulo</label>
-                            <input type="text" class="form-control" id="title" aria-describedby="title" name="title"
-                                autocomplete="off" placeholder="Titulo" class="form-control-plaintext" required
-                                value="{{ old('title', $certificate->title) }}">
+                            <input type="text" class="form-control" id="title" aria-describedby="title"
+                                name="title" autocomplete="off" placeholder="Titulo" class="form-control-plaintext"
+                                required value="{{ old('title', $certificate->title) }}">
                         </div>
 
                         <div class="form-group">
@@ -82,22 +82,30 @@
                             <label for="program">Programa</label>
                             <select class="form-control" name="program">
                                 <option value="{{ $certificate->program }}">{{ $certificate->program }}</option>
-                                <option value="Bachiller">Bachiller</option>
-                                <option value="Titulo">Titulo</option>
-                                <option value="Segunda Especialidad">Segunda Especialidad</option>
-                                <option value="Complementación Academica">Complementación Academica</option>
-                                <option value="Maestria">Maestria</option>
-                                <option value="Doctorado">Doctorado</option>
+                                @foreach ($certificate_types as $certificate_type)
+                                    @if ($certificate->program != $certificate_type)
+                                        <option value="{{ $certificate_type }}">{{ ucwords($certificate_type) }}</option>
+                                    @endif
+                                @endforeach
                             </select>
-
                         </div>
 
                         <div class="form-group">
-                            <label for="faculty">Facultad</label>
-                            <input type="text" class="form-control" id="faculty" aria-describedby="faculty" name="faculty"
-                                autocomplete="off" placeholder="Facultad" class="form-control-plaintext" required
-                                value="{{ $certificate->faculty }}">
-
+                            <label for="denominacion_id">Denominacion</label>
+                            <input value="{{ $certificate->denominacion->nombre }}" list="denominacion_id"
+                                name="denominacion_id" id="denominacion_ide" class="form-control selectpicker"
+                                placeholder="Denominación del grado" autocomplete="off" required>
+                            <input id="denominacion_ided" type="hidden" name="denominacion_ided">
+                            <datalist name="denominacion_id" id="denominacion_id">
+                                <option value="{{ $certificate->denominacion->nombre }}">
+                                    {{ $certificate->denominacion->nombre }}</option>
+                                @foreach ($denominations as $denomination)
+                                    @if ($certificate->denominacion->nombre != $denomination->nombre)
+                                        <option value="{{ $denomination->nombre }}">{{ ucwords($denomination->nombre) }}
+                                        </option>
+                                    @endif
+                                @endforeach
+                            </datalist>
                         </div>
                         <div class="form-group">
                             <label for="originality">Originalidad</label>
@@ -119,17 +127,31 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
                                 </div>
-                                <input type="date" class="form-control" id="date" aria-describedby="date" name="date"
-                                    autocomplete="off" placeholder="Similitud" class="form-control-plaintext" required
-                                    value="{{ $certificate->date }}">
+                                <input type="date" class="form-control" id="date" aria-describedby="date"
+                                    name="date" autocomplete="off" placeholder="Similitud"
+                                    class="form-control-plaintext" required value="{{ $certificate->date }}">
                             </div>
 
                         </div>
                         <div class="form-group">
+                            <label for="resolucion">Resolución</label>
+                            <div class="input-group input-group-alternative">
+                                <div class="custom-file" id="customFile">
+                                    <input type="file" class="custom-file-input" name="resolucion" id="resolucion">
+                                    <label class="custom-file-label" for="resolucion">
+                                        @if ($certificate->resolucion_ruta)
+                                            {{ $file_name }}
+                                        @elseif (!$certificate->resolucion_ruta)
+                                            Seleccionar Archivo
+                                        @endif
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
                             <label for="observation">Observación</label>
                             <textarea class="form-control" name="observation" type="text" id="observation">{{ $certificate->observation }}</textarea>
-
-
                         </div>
 
                         <button type="submit" class="btn btn-primary">Guardar</button>
@@ -141,8 +163,14 @@
 
         </div>
     </div>
-
-
-
     </div>
+    @push('js')
+        <script>
+            document.querySelector('.custom-file-input').addEventListener('change', function(e) {
+                var fileName = document.getElementById("resolucion").files[0].name;
+                var nextSibling = e.target.nextElementSibling
+                nextSibling.innerText = fileName
+            })
+        </script>
+    @endpush
 @endsection

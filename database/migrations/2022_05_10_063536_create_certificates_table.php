@@ -22,6 +22,7 @@ class CreateCertificatesTable extends Migration
             // $table->string('d');
             $table->string('originality');
             $table->string('similitude');
+            $table->string('resolucion_ruta');
             $table->string('date');
             // $table->string('code');
             $table->string('observation')->nullable();

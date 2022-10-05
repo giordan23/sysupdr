@@ -49,7 +49,7 @@
 
                 {{-- form --}}
                 <div class="card-body">
-                    <form method="post" action="{{ route('certificate.store') }}">
+                    <form method="post" action="{{ route('certificate.store') }}" enctype="multipart/form-data">
                         @method('POST')
                         @csrf
 
@@ -107,13 +107,14 @@
 
                         <div class="form-group">
                             <label for="program">Programa</label>
-                            <select class="form-control" name="program">
+                            <input list="program" name="program" id="programe" class="form-control selectpicker"
+                                placeholder="Programa" autocomplete="off" required>
+                            <input id="programed" type="hidden" name="programed">
+                            <datalist name="program" id="program">
                                 @foreach ($certificate_types as $certificate_type)
                                     <option value="{{ $certificate_type }}">{{ ucwords($certificate_type) }}</option>
                                 @endforeach
-
-                            </select>
-
+                            </datalist>
                         </div>
 
                         {{-- <div class="form-group">
@@ -124,12 +125,17 @@
                         </div> --}}
                         <div class="form-group">
                             <label for="denominacion_id">Denominacion</label>
-                            <select class="form-control" name="denominacion_id" id="denominacion_id">
-                                <option value="">Selecione...</option>
+                            <input list="denominacion_id" name="denominacion_id" id="denominacion_ide"
+                                class="form-control selectpicker" placeholder="Denominación del grado" autocomplete="off"
+                                required>
+                            <input id="denominacion_ided" type="hidden" name="denominacion_ided">
+                            <datalist name="denominacion_id" id="denominacion_id">
+                                {{-- <option value="">Selecione...</option> --}}
                                 @foreach ($denominations as $denomination)
-                                    <option value="{{ $denomination->id }}">{{ ucwords($denomination->nombre) }}</option>
+                                    <option value="{{ $denomination->nombre }}">{{ ucwords($denomination->nombre) }}
+                                    </option>
                                 @endforeach
-                            </select>
+                            </datalist>
                         </div>
                         <div class="form-group">
                             <label for="similitude">Similitud</label>
@@ -156,8 +162,20 @@
                                 <input class="form-control datepicker" data-date-format="yyyy-mm-dd" name="date"
                                     placeholder="Selecciona" type="text" value="{{ date('Y-m-d') }}" required>
                             </div>
-
                         </div>
+                        <div class="form-group">
+                            <label for="originality">Resolución</label>
+                            <div class="input-group input-group-alternative">
+                                <div class="custom-file" id="customFile">
+                                    <input type="file" class="custom-file-input" name="resolucion" id="resolucion"
+                                        aria-describedby="fileHelp">
+                                    <label class="custom-file-label" for="resolucion">
+                                        Seleccionar Archivo
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="form-group">
                             <label for="observation">Observación</label>
                             <textarea class="form-control" name="observation" type="text" id="observation">{{ old('observation') }}</textarea>
@@ -227,5 +245,12 @@
                 }
             } catch (e) {}
         }
+    </script>
+    <script>
+        document.querySelector('.custom-file-input').addEventListener('change', function(e) {
+            var fileName = document.getElementById("resolucion").files[0].name;
+            var nextSibling = e.target.nextElementSibling
+            nextSibling.innerText = fileName
+        })
     </script>
 @endpush

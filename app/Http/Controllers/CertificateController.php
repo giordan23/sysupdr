@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Http\Requests;
+
 namespace App\Http\Controllers;
 
 use App\Models\Adviser;
@@ -7,12 +9,14 @@ use App\Models\Author;
 use App\Models\Certificate;
 use App\Models\Denominacion;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 use \Barryvdh\DomPDF\Facade\Pdf  as PDF;
 use Carbon\Carbon;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class CertificateController extends Controller
 {
+
     /**
      * Display a listing of the resource.
      *
@@ -43,11 +47,12 @@ class CertificateController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\StoreCertificateRequest  $request
+    //  * @param  \App\Http\Requests\StoreCertificateRequest  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
+
         $rules = [
             'title' => 'required|min:3',
             'originality' => 'required|numeric',
@@ -73,11 +78,14 @@ class CertificateController extends Controller
 
         ];
         $this->validate($request, $rules, $messages);
-
-        $program = $request->input('program');
-
-        $nro_doc = Certificate::where('program', $program)->count() + 1;
         $nro_ceros = '';
+        $program = $request->input('program');
+        $nro_doc = Certificate::where('program', $program)->count() + 1;
+        $doc_num = "Nº " . $nro_ceros . $nro_doc . "-" . Carbon::now()->format('Y');
+
+        $deno = $request->input('denominacion_id');
+        $deno_id = Denominacion::where('nombre', $deno)->first()->id;
+
         // dd($nro_doc);
 
         if ($nro_doc < 10) {
@@ -90,20 +98,34 @@ class CertificateController extends Controller
             $nro_ceros = '';
         }
 
-        $doc_num = "Nº " . $nro_ceros . $nro_doc . "-" . Carbon::now()->format('Y');
-
         $certificate = new Certificate();
+
+        //archivo
+        if ($request->hasFile("resolucion")) {
+            $file = $request->file('resolucion');
+            $nombre = "res_" . $program . "_" . $nro_doc . $certificate->updated_at . "." . $file->guessExtension();
+            $ruta = public_path("resoluciones/" . $nombre);
+            //C:\xampp\htdocs\systemupdyr\public\resoluciones/res_BACHILLER_2.pdf
+
+            if ($file->guessExtension() == "pdf") {
+                copy($file, $ruta);
+            }
+        };
+
+
         $certificate->title = strtoupper($request->input('title'));
         $certificate->author_id = $request->input('authored');
         $certificate->author2_id = $request->input('authored2');
-        $certificate->denominacion_id = $request->input('denominacion_id');
+        $certificate->denominacion_id = $deno_id;
         $certificate->adviser_id = $request->input('advisered');
         $certificate->program = $program;
         $certificate->document_number = $doc_num;
 
-        // $certificate->faculty = $request->input('faculty');
+        $certificate->resolucion_ruta = $ruta;
         $certificate->originality = $request->input('originality');
         $certificate->similitude = $request->input('similitude');
+        // $asd = $request->resolucion->path();
+        // dd($asd);
         $certificate->date = $request->input('date');
         $certificate->observation = $request->input('observation');
         $certificate->save();
@@ -134,7 +156,14 @@ class CertificateController extends Controller
         $certificate = Certificate::findOrFail($id);
         $authors = Author::get();
         $advisers = Adviser::get();
-        return view('certificate.edit', compact('certificate', 'authors', 'advisers'));
+        $certificate_types = ['BACHILLER', 'TITULO', 'MAESTRIA', 'DOCTORADO', 'SEGUNDA ESPECIALIDAD', 'FAEDIS', 'FOCAM', 'PROGRAMA 066'];
+        $denominations = Denominacion::all();
+        $base_name = public_path("resoluciones/");
+        $certificate->resolucion_ruta;
+        $file_name = str_replace($base_name, '', $certificate->resolucion_ruta);
+        // dd($file_name);
+
+        return view('certificate.edit', compact('certificate', 'authors', 'advisers', 'certificate_types', 'denominations', 'file_name'));
     }
     /**
      * Update the specified resource in storage.
