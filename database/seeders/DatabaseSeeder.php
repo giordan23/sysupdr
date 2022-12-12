@@ -78,15 +78,13 @@ class DatabaseSeeder extends Seeder
             ]);
         }
 
-
-
         Certificate::create([
             'title' => 'IDENTIDAD CULTURAL EN LOS NIÑOS QUECHUA HABLANTES DEL 6° GRADO DE LA INSTITUCIÓN EDUCATIVA N°31278 DE PUCARUMI - TAYACAJA',
             'program' => 'BACHILLER',
             'document_number' => 'Nº 0001-2022',
             'originality' => 100,
             'similitude' => 0,
-            'denominacion_id' => $d1->id,
+            'denominacion_id' => 1,
             'date' => Carbon::now()->format('d-m-Y'),
             'resolucion_ruta' => 'ruta/prueba',
             'observation' => 'asdasd',
