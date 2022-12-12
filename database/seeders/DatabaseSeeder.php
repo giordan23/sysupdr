@@ -49,11 +49,36 @@ class DatabaseSeeder extends Seeder
             'created_at' => Carbon::now()
         ]);
 
+        $denominaciones = [
+            'ABOGADO ',
+            'ECONOMISTA',
+            'INGENIERO DE MINAS',
+            'CONTADOR PÚBLICO',
+            'ADMINISTRADOR ',
+            'LICENCIADO EN ENFERMERÍA',
+            'OBSTETRA',
+            'INGENIERO DE SISTEMAS',
+            'INGENIERO ELECTRÓNICO',
+            'INGENIERO AMBIENTAL Y SANITARIO',
+            'INGENIERO ZOOTECNISTA',
+            'INGENIERO CIVIL',
+            'INGENIERO AGROINDUSTRIAL',
+            'INGENIERO AGRONOMO',
+            'LICENCIADO EN CIENCIAS DE LA EDUCACIÓN: EDUCACIÓN INICIAL E INTERCULTURAL BILINGÜE ',
+            'LICENCIADO EN CIENCIAS DE LA EDUCACIÓN: EDUCACIÓN PRIMARIA E INTERCULTURAL BILINGÜE',
+            'LICENCIADO EN CIENCIAS DE LA EDUCACIÓN: EDUCACIÓN ESPECIAL',
+            'LICENCIADO EN CIENCIAS DE LA EDUCACIÓN: CIENCIAS SOCIALES Y DESARROLLO RURAL',
+            'LICENCIADO EN CIENCIAS DE LA EDUCACIÓN: MATEMÁTICA, COMPUTACIÓN E INFORMÁTICA'
+        ];
 
-        $d1 = Denominacion::create(['nombre' => 'CIENCIAS DE LA EDUCACION']);
-        $d2 = Denominacion::create(['nombre' => 'CIENCIAS DE LA SALUD']);
-        $d3 = Denominacion::create(['nombre' => 'INGENIERIA']);
-        $d4 = Denominacion::create(['nombre' => 'DERECHO Y CIENCIAS POLITICAS']);
+        foreach ($denominaciones as $key => $denominacion) {
+            Denominacion::create([
+                'nombre' => $key,
+                'mencion' => $denominacion['mencion'],
+            ]);
+        }
+
+
 
         Certificate::create([
             'title' => 'IDENTIDAD CULTURAL EN LOS NIÑOS QUECHUA HABLANTES DEL 6° GRADO DE LA INSTITUCIÓN EDUCATIVA N°31278 DE PUCARUMI - TAYACAJA',

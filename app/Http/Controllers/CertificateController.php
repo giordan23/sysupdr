@@ -75,7 +75,6 @@ class CertificateController extends Controller
             'authored2.different' => 'Seleccione el autor diferente al primero',
             'advisered.required' => 'El asesor es requerido',
             'advisered.exists' => 'No se encontro al asesor',
-
         ];
         $this->validate($request, $rules, $messages);
         $nro_ceros = '';
@@ -189,12 +188,25 @@ class CertificateController extends Controller
         $certificate->author_id = (int)$separatedAuthor[0];
         $certificate->adviser_id = (int)$separatedAdviser[0];
         $certificate->program = $request->input('program');
-        $certificate->faculty = $request->input('faculty');
+        // $certificate->faculty = $request->input('faculty');
         $certificate->originality = $request->input('originality');
         $certificate->similitude = $request->input('similitude');
         $certificate->date = $request->input('date');
         $certificate->observation = $request->input('observation');
         $certificate->update();
+
+        //archivo
+        if ($request->hasFile("resolucion")) {
+            $nro_doc = Certificate::where('program', $certificate->program)->count();
+            $file = $request->file('resolucion');
+            $nombre = "res_" . $certificate->program . "_" . $nro_doc . $certificate->updated_at . "." . $file->guessExtension();
+            $ruta = public_path("resoluciones/" . $nombre);
+            //C:\xampp\htdocs\systemupdyr\public\resoluciones/res_BACHILLER_2.pdf
+
+            if ($file->guessExtension() == "pdf") {
+                copy($file, $ruta);
+            }
+        };
 
         if ($certificate) {
 
