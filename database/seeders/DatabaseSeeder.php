@@ -74,7 +74,7 @@ class DatabaseSeeder extends Seeder
         foreach ($denominaciones as $key => $denominacion) {
             Denominacion::create([
                 'nombre' => $key,
-                'mencion' => $denominacion['mencion'],
+                'mencion' => $denominacion,
             ]);
         }
 

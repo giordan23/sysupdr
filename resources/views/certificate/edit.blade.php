@@ -92,16 +92,16 @@
 
                         <div class="form-group">
                             <label for="denominacion_id">Denominacion</label>
-                            <input value="{{ $certificate->denominacion->nombre }}" list="denominacion_id"
+                            <input value="{{ $certificate->denominacion->mencion }}" list="denominacion_id"
                                 name="denominacion_id" id="denominacion_ide" class="form-control selectpicker"
                                 placeholder="Denominación del grado" autocomplete="off" required>
                             <input id="denominacion_ided" type="hidden" name="denominacion_ided">
                             <datalist name="denominacion_id" id="denominacion_id">
-                                <option value="{{ $certificate->denominacion->nombre }}">
-                                    {{ $certificate->denominacion->nombre }}</option>
+                                <option value="{{ ucwords($certificate->denominacion->mencion) }}">
+                                    </option>
                                 @foreach ($denominations as $denomination)
-                                    @if ($certificate->denominacion->nombre != $denomination->nombre)
-                                        <option value="{{ $denomination->nombre }}">{{ ucwords($denomination->nombre) }}
+                                    @if ($certificate->denominacion->mencion != $denomination->mencion)
+                                        <option value="{{ ucwords($denomination->mencion) }}">
                                         </option>
                                     @endif
                                 @endforeach

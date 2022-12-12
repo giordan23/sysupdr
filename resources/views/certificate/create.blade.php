@@ -132,7 +132,7 @@
                             <datalist name="denominacion_id" id="denominacion_id">
                                 {{-- <option value="">Selecione...</option> --}}
                                 @foreach ($denominations as $denomination)
-                                    <option value="{{ $denomination->nombre }}">{{ ucwords($denomination->nombre) }}
+                                    <option value="{{ ucwords($denomination->mencion) }}">
                                     </option>
                                 @endforeach
                             </datalist>
@@ -179,8 +179,6 @@
                         <div class="form-group">
                             <label for="observation">Observación</label>
                             <textarea class="form-control" name="observation" type="text" id="observation">{{ old('observation') }}</textarea>
-
-
                         </div>
 
                         <button type="submit" class="btn btn-primary">Guardar</button>
@@ -192,8 +190,6 @@
 
         </div>
     </div>
-
-
 
     </div>
 @endsection

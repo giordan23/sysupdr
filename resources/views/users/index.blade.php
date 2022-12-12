@@ -1,4 +1,4 @@
-<html lang="en"><head>
+<html lang="es"><head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -216,7 +216,7 @@
         </ul>
     </div>
 </div>
-</nav>                
+</nav>
     <div class="main-content">
         <!-- Top navbar -->
 <nav class="navbar navbar-top navbar-expand-md navbar-dark" id="navbar-main">
@@ -277,7 +277,7 @@
         </li>
     </ul>
 </div>
-</nav>    
+</nav>
             <div class="header bg-gradient-primary pb-8 pt-5 pt-md-8">
 <div class="container-fluid">
     <div class="alert alert-danger" role="alert">
@@ -388,7 +388,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="col-12">
                                         </div>
 
@@ -425,13 +425,13 @@
                 </div>
                 <div class="card-footer py-4">
                     <nav class="d-flex justify-content-end" aria-label="...">
-                        
+
                     </nav>
                 </div>
             </div>
         </div>
     </div>
-        
+
     <footer class="footer">
 <div class="row align-items-center justify-content-xl-between">
 <div class="col-xl-6">
@@ -462,11 +462,11 @@
 </div></footer>    </div>
     </div>
 
-    
+
     <script src="{{ asset('argon') }}/vendor/jquery/dist/jquery.min.js"></script>
         <script src="{{ asset('argon') }}/vendor/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    
-            
+
+
     <!-- Argon JS -->
     <script src="{{ asset('argon') }}/js/argon.js?v=1.0.0"></script>
 </body></html>
