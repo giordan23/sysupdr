@@ -12,7 +12,7 @@
 </head>
 <style>
     body {
-        background-image: url("https://blogger.googleusercontent.com/img/a/AVvXsEiq0ArH6BgpCmyXTAfDuF8Iw6uslyOQAfM2-9j5i-RfKe-mBWdNBeBoebPyygtIqik9dWSjL72RktggXkabjIuaNbOnMRjeg6XOGQD3unq6ggyNS1wWu_pDOYeae82mcftsNUB9JwK7_hBxtdY3fXfEbD5ygdFSpe5Xu8fV4KuICUeV-1TDhsrOW3s_Wg");
+        background-image: url("https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhenkgch9UxmqX18hsHDEgfPA2iCPlsjSm_0dYmE-hfPVHB3i97ZPfxTTeU-oYt944D-1GzSR03SAehgSEchF-o4_oyPu1SznXCdIcgHwDh1pC8YEKMEvb35zp0NKUiWLTCMWYMjT-dHKhqls82hJdfIWaePp_z_6g01hsIIS_4dlAoc96ycMzFC-yYPA/w784-h1109/Papeleleria%20Acuarela%20Azul%20-%20Documento%20A4.png");
     }
 
     @page {
@@ -21,7 +21,7 @@
     }
 
     #title {
-        margin-top: 30%;
+        margin-top: 25%;
     }
 
     #titleh1 {
@@ -118,7 +118,7 @@
         <div class="row">
             <div id="title" class="py-1">
                 <strong>
-                    <p id="titleh1" class="text-danger pt-3 text-center"><i>CERTIFICADO DE ORIGINALIDAD</i></p>
+                    <p id="titleh1" class="text-danger pt-3 text-center"><i>CERTIFICADO DE SIMILITUD</i></p>
                 </strong>
             </div>
             <div class="margen">
@@ -128,8 +128,7 @@
             </div>
             <div class="sublist pt-1">
                 <p class="text-justify">Trabajo de Investigación, @if ($certificate)
-
-                @endif titulado:
+                    @endif titulado:
                     <br><strong>"{{ $certificate->title }}"</strong>
                 </p>
             </div>
@@ -145,7 +144,7 @@
 
             <div class="sublist pt-1">
                 <p>Para obtener: <br>{!! $message !!}
-                    <strong> {{ $certificate->denominacion->nombre }}. </strong>
+                    <strong> {{ $certificate->denominacion->mencion }}. </strong>
                 </p>
             </div>
 
@@ -185,7 +184,6 @@
             <p class="text-right pr-5 mr-4">
                 El presente Certificado se expide el {{ $fecha_emision }}.
             </p>
-
         </div>
         <div>
             <p id="code" class="pt-5 mt-5">

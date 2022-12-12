@@ -80,10 +80,8 @@ class CertificateController extends Controller
         $nro_ceros = '';
         $program = $request->input('program');
         $nro_doc = Certificate::where('program', $program)->count() + 1;
-        $doc_num = "Nº " . $nro_ceros . $nro_doc . "-" . Carbon::now()->format('Y');
-
         $deno = $request->input('denominacion_id');
-        $deno_id = Denominacion::where('nombre', $deno)->first()->id;
+        $deno_id = Denominacion::where('mencion', $deno)->first()->id;
 
         // dd($nro_doc);
 
@@ -96,6 +94,7 @@ class CertificateController extends Controller
         } else {
             $nro_ceros = '';
         }
+        $doc_num = "Nº " . $nro_ceros . $nro_doc . "-" . Carbon::now()->format('Y');
 
         $certificate = new Certificate();
 
@@ -103,12 +102,14 @@ class CertificateController extends Controller
         if ($request->hasFile("resolucion")) {
             $file = $request->file('resolucion');
             $nombre = "res_" . $program . "_" . $nro_doc . $certificate->updated_at . "." . $file->guessExtension();
+            dd($nombre);
             $ruta = public_path("resoluciones/" . $nombre);
-            //C:\xampp\htdocs\systemupdyr\public\resoluciones/res_BACHILLER_2.pdf
 
             if ($file->guessExtension() == "pdf") {
                 copy($file, $ruta);
             }
+        } else {
+            $ruta = null;
         };
 
 
